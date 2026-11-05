@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna App Studio | Official Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --accent: #c084fc;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        /* Animated Background Glow */
+        .glow-circle {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.35;
+        }
+        .glow-1 { top: -100px; left: -100px; background: var(--primary); }
+        .glow-2 { bottom: -100px; right: -100px; background: var(--accent); }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Compact Creator Profile Pill */
+        .creator-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 5px 12px 5px 6px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            user-select: none;
+        }
+
+        .creator-trigger:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(56, 189, 248, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .avatar-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            border: 1.5px solid var(--primary);
+            background: linear-gradient(135deg, #1e293b, #334155);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Fallback Placeholder if image fails to load */
+        .avatar-fallback {
+            display: none;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        .creator-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+            text-align: left;
+        }
+
+        .creator-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .creator-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            max-width: 720px;
+            margin: 32px auto 46px;
+            padding: 0 20px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.02rem;
+            line-height: 1.6;
+        }
+
+        /* Apps Grid */
+        .apps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 28px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Glass Card */
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 28px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(56, 189, 248, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .icon-video { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+        .icon-anim { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+        .app-meta h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .category-tag {
+            font-size: 0.78rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .app-desc {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 26px;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            font-size: 0.78rem;
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: #fff;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: opacity 0.2s, transform 0.2s;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-download:hover {
+            opacity: 0.95;
+            transform: scale(1.01);
+        }
+
+        .version-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* About Creator Modal Screen */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 6, 14, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .about-modal {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 28px 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            animation: popIn 0.22s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.94); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: none;
+            color: #cbd5e1;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .modal-avatar-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin: 0 auto 14px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 16px;
+        }
+
+        .modal-bio {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .creator-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 70px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-circle glow-1"></div>
+    <div class="glow-circle glow-2"></div>
+
+    <nav>
+        <div class="logo">KRISHNA STUDIO</div>
+
+        <!-- Compact Creator Profile Trigger -->
+        <div class="nav-right">
+            <div class="creator-trigger" onclick="openCreatorModal()" title="View About Creator">
+                <div class="avatar-box">
+                    <!-- Note: https://ibb.co/PZGBhKs5 एक वेबपेज लिंक है। अगर डायरेक्ट इमेज लोड नहीं होती है, तो यह अपने आप रिप्लेसेबल प्लेसहोल्डर दिखाएगा -->
+                    <img 
+                        src="https://ibb.co/PZGBhKs5" 
+                        alt="Krishna Kr Mahto" 
+                        class="avatar-img"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    >
+                    <span class="avatar-fallback">KK</span>
+                </div>
+                <div class="creator-text">
+                    <span class="creator-name">Krishna Kr Mahto</span>
+                    <span class="creator-label">App Creator</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="status-badge">● 100% Safe & Verified</div>
+        <h1>Next-Gen <span>Android Apps</span><br>Built for Creators</h1>
+        <p>क्रिएटिव और पावरफुल एंड्रॉइड ऐप्स का हब! बिना किसी रुकावट के आधुनिक टूल्स और स्मूथ अनुभव पाएं। सीधे अपने फोन में ऑफिशियल APK डाउनलोड करें।</p>
+    </section>
+
+    <main class="apps-container">
+
+        <!-- App 1: KineKrish -->
+        <div class="app-card">
+            <div>
+                <div class="card-header">
+                    <div class="app-icon icon-video">KK</div>
+                    <div class="app-meta">
+                        <span class="category-tag">Video & Audio</span>
+                        <h2>KineKrish Editor</h2>
+                    </div>
+                </div>
+                <p class="app-desc">
+                    ऑफलाइन और प्रो-लेवल वीडियो एडिटिंग का नया अनुभव। इसमें आपको मिलता है मॉडर्न 3D ग्लास डिजाइन, मल्टी-ट्रैक टाइमलाइन, ऑडियो स्टूडियो और सुपरफास्ट एक्सपोर्ट।
+                </p>
+                <div class="features">
+                    <span class="pill">✨ 3D Glass UI</span>
+                    <span class="pill">🎬 Multi-Track</span>
+                    <span class="pill">🎵 Audio Studio</span>
+                    <span class="pill">⚡ Offline Export</span>
+                </div>
+            </div>
+            <div>
+                <a href="APNA_KINEKRISH_APK_LINK_YAHAN_DALEIN" class="btn-download" download>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/>
+                    </svg>
+                    Download APK
+                </a>
+                <div class="version-info">
+                    <span>Version 1.0.0</span>
+                    <span>Android 8.0+</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App 2: A1 Animation Maker -->
+        <div class="app-card">
+            <div>
+                <div class="card-header">
+                    <div class="app-icon icon-anim">A1</div>
+                    <div class="app-meta">
+                        <span class="category-tag">2D Animation</span>
+                        <h2>A1 Animation Maker</h2>
+                    </div>
+                </div>
+                <p class="app-desc">
+                    2D एनिमेशन की दुनिया में अपनी कहानियों को जीवंत करें। आसान सीन एडिटिंग, कस्टमाइज़ेबल कैरेक्टर पोज़ और हिंदी टेक्स्ट-टू-स्पीच सपोर्ट के साथ कार्टून वीडियो बनाएं।
+                </p>
+                <div class="features">
+                    <span class="pill">🎨 Village Characters</span>
+                    <span class="pill">🗣️ Hindi TTS</span>
+                    <span class="pill">🏃 Custom Poses</span>
+                    <span class="pill">🎞️ Scene Builder</span>
+                </div>
+            </div>
+            <div>
+                <a href="APNA_A1_ANIMATION_APK_LINK_YAHAN_DALEIN" class="btn-download" download>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/>
+                    </svg>
+                    Download APK
+                </a>
+                <div class="version-info">
+                    <span>Version 1.0.0</span>
+                    <span>Android 8.0+</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- About Creator Modal Screen -->
+    <div class="modal-overlay" id="creatorModal" onclick="closeCreatorModal(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeCreatorModal()" aria-label="Close">✕</button>
+            <div class="modal-avatar-wrap">
+                <img 
+                    src="https://ibb.co/PZGBhKs5" 
+                    alt="Krishna Kr Mahto" 
+                    class="avatar-img"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                >
+                <span class="avatar-fallback">KK</span>
+            </div>
+            <h3 class="modal-title">Krishna Kr Mahto</h3>
+            <div class="modal-subtitle">App Creator</div>
+            <p class="modal-bio">
+                एंड्रॉइड ऐप डेवलपर और क्रिएटर। आधुनिक यूजर इंटरफेस (Jetpack Compose & Kotlin), ऑफलाइन वीडियो एडिटिंग टूल्स और 2D एनिमेशन ऐप्स बनाने में विशेष रुचि।
+            </p>
+            <div class="creator-badges">
+                <span class="pill">📱 Android Developer</span>
+                <span class="pill">🎬 KineKrish</span>
+                <span class="pill">🎨 A1 Animation</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Krishna App Studio • Created by Krishna Kr Mahto</p>
+    </footer>
+
+    <script>
+        function openCreatorModal() {
+            document.getElementById('creatorModal').classList.add('active');
+        }
+        function closeCreatorModal() {
+            document.getElementById('creatorModal').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>
